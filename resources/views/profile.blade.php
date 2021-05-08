@@ -104,7 +104,7 @@
                                     <input id="address" type="text"
                                            class="form-control @error('address') is-invalid @enderror"
                                            name="address"
-                                           value="{{$user['detail']['address']}}" autofocus>
+                                           value="{{ $user->detail->address }}" autofocus>
                                 </div>
                             </div>
 
@@ -130,6 +130,17 @@
                                            name="country"
                                            value="{{$user['detail']['country']}}" autofocus>
                                 </div>
+
+                            </div>
+                            <div class="form-group row">
+                                <label for="city"
+                                       class="col-md-4 col-form-label text-md-right">{{ __('Select Profession') }}</label>
+                                <div class="col-md-6">
+                                    <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
+                                        <option value="AL">Alabama</option>
+                                        <option value="WY">Wyoming</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-4">
@@ -146,3 +157,5 @@
         </div>
     </div>
 @endsection
+
+

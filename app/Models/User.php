@@ -44,4 +44,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Detail::class);
     }
+
+    public function profession()
+    {
+        return $this->belongsToMany(Profession::class);
+    }
 }

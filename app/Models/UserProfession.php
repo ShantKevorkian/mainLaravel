@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Profession extends Model
+class UserProfession extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name'
+        'user_id',
+        'profession_id',
+
     ];
-    public function users()
-    {
-        return $this->belongsToMany(User::class);
-    }
+
+
+
 }

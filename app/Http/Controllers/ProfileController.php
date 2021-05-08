@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Profession;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Detail;
@@ -18,9 +19,9 @@ class ProfileController extends Controller
 
     public function index()
     {
-        $user =User::with(['detail'])->find(Auth::id())->toArray();
-
-        return view('profile')->with('user',$user);
+        return view('profile')
+            ->with('user', User::with(['detail'])->find(Auth::id()))
+            ->with('professions', Profession::all());
     }
 
     public function update(Request $request)
