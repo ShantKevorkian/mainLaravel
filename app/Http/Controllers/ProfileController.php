@@ -14,14 +14,19 @@ class ProfileController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+            $this->middleware('auth');
     }
+
+
+
+
 
     public function index()
     {
         return view('profile')
             ->with('user', User::with(['detail'])->find(Auth::id()))
             ->with('professions', Profession::all());
+
     }
 
     public function update(Request $request)
@@ -34,6 +39,7 @@ class ProfileController extends Controller
                     Rule::unique('users')->ignore(Auth::id())
                 ],
                 'password' => 'nullable|string',
+
             ]);
             User::where('id', Auth::id())->update([
                 'name' => $request->name,

@@ -68,9 +68,6 @@
 
 
 
-
-
-
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -92,7 +89,7 @@
                                 <div class="col-md-6">
                                     <input id="phone" type="text"
                                            class="form-control @error('phone') is-invalid @enderror" name="phone"
-                                           value="{{$user['detail']['phone']}}" autofocus>
+                                           value="{{$user->detail == null ? '' : $user->detail->phone }}" autofocus>
                                 </div>
                             </div>
 
@@ -104,7 +101,7 @@
                                     <input id="address" type="text"
                                            class="form-control @error('address') is-invalid @enderror"
                                            name="address"
-                                           value="{{ $user->detail->address }}" autofocus>
+                                           value="{{ $user->detail == null ? '' : $user->detail->address  }}" autofocus>
                                 </div>
                             </div>
 
@@ -115,7 +112,7 @@
                                 <div class="col-md-6">
                                     <input id="city" type="text"
                                            class="form-control @error('city') is-invalid @enderror" name="city"
-                                           value="{{$user['detail']['city']}}"
+                                           value="{{$user->detail == null ? '' : $user->detail->city }}"
                                            autofocus>
                                 </div>
                             </div>
@@ -128,17 +125,19 @@
                                     <input id="country" type="text"
                                            class="form-control @error('country') is-invalid @enderror"
                                            name="country"
-                                           value="{{$user['detail']['country']}}" autofocus>
+                                           value="{{$user->detail == null ? '' : $user->detail->country }}" autofocus>
                                 </div>
 
                             </div>
                             <div class="form-group row">
-                                <label for="city"
+                                <label for="profession"
                                        class="col-md-4 col-form-label text-md-right">{{ __('Select Profession') }}</label>
                                 <div class="col-md-6">
                                     <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
-                                        <option value="AL">Alabama</option>
-                                        <option value="WY">Wyoming</option>
+
+                                        @foreach($professions as $profession)
+                                        <option value="{{$profession->id}}">{{$profession->name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>

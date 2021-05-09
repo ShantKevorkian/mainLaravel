@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserProfession extends Model
 {
     use HasFactory;
-
+    public $timestamps = false;
     protected $fillable = [
         'user_id',
         'profession_id',
