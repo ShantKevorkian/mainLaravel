@@ -16,9 +16,15 @@ class ImageController extends Controller
 
         $this->middleware('auth');
     }
+
+
     public function upload (Request $request){
         $user = auth()->user();
+
         $path = $request->file('avatar')->store('avatars','public');
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
         Avatar::updateOrCreate(
             ['user_id' => $user->id],
             ['original_name' => $request->avatar->getClientOriginalName(),
@@ -28,7 +34,7 @@ class ImageController extends Controller
 
 
 
-           return back()->with('path',$path);
+           return back()->with('success','Image  uploaded');
 
     }
 }

@@ -18,7 +18,7 @@ class CreateAvatarsTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->string('original_name');
             $table->string('path');
-            $table->boolean('processed')->default(0);
+            $table->boolean('processed')->default(false);
         });
     }
 

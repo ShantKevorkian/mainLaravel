@@ -3,18 +3,25 @@
 @section('content')
 
     <div class="container">
+        @if($user->avatar)
+            <img class="rounded-circle" src="{{asset('/storage/' . $user->avatar->path)}}" alt=""
+                 style="width: 200px;height:200px">
+        @else
+            <img class="rounded-circle" src="{{asset('/storage/avatars/default.jpg' )}}" alt=""
+                 style="width: 200px;height:200px">
+        @endif
+
+
         <form action="{{route('avatar.upload')}}" method="post" enctype="multipart/form-data">
             {{csrf_field()}}
-           <div class="form-group">
-               <input type="file" name="avatar">
-           </div>
+            <div class="form-group">
+                <input type="file" name="avatar">
+            </div>
             <button class="btn btn-default" type="submit">Upload</button>
         </form>
-        @if(session('path'))
 
-            <img class="img-thumbnail" src="{{asset('/storage/' . session('path'))}}" alt="">
-        @endif
-        <img class="img-thumbnail" src="{{asset('/storage/' . session('path'))}}" alt="">
+
+        {{--        <img class="img-thumbnail" src="{{asset('/storage/' . session('path'))}}" alt="">--}}
     </div>
 
 
@@ -157,9 +164,10 @@
                                 <div class="col-md-6">
                                     <select class="js-example-basic-multiple" name="profession[]" multiple="multiple">
                                         <option value="">Select Country</option>
-                                            @foreach($professions as $profession)
-                                                <option value="{{$profession->id}} " @if(in_array($profession->id,$user->professions->pluck('id')->all())) selected  @endif >{{$profession->name}}</option>
-                                            @endforeach
+                                        @foreach($professions as $profession)
+                                            <option value="{{$profession->id}} "
+                                                    @if(in_array($profession->id,$user->professions->pluck('id')->all())) selected @endif >{{$profession->name}}</option>
+                                        @endforeach
 
                                     </select>
                                 </div>

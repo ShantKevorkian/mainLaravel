@@ -16,5 +16,8 @@ class Avatar extends Model
         'processed',
 
     ];
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

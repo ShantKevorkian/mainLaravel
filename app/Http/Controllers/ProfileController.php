@@ -19,16 +19,9 @@ class ProfileController extends Controller
 
     public function index()
     {
-            $user = auth()->user()->load('detail','professions','avatar');
-            dd($user->avatar);
-
         return view('profile')
             ->with('user', auth()->user()->load('detail','professions','avatar'))
             ->with('professions', Profession::all());
-
-
-
-
     }
 
     public function update(Request $request)
@@ -49,8 +42,6 @@ class ProfileController extends Controller
             'email' => $request->email,
             'password' => $request->password ? bcrypt($request->password) : $user->password
         ]);
-
-
         return back()->with('successProf', 'Profile successfully updated');
     }
 }
