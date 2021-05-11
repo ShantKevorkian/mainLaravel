@@ -23,9 +23,18 @@ class ProfileController extends Controller
 
     public function index()
     {
+        $user =User::with(['profession'])->find(Auth::id());
+        $profArr =[];
+        foreach ($user->profession as $profession){
+
+            array_push($profArr ,$profession['id']);
+        }
+
+
         return view('profile')
             ->with('user', User::with(['detail'])->find(Auth::id()))
-            ->with('professions', Profession::all());
+            ->with('professions', Profession::all())
+            ->with("user_professions",$profArr);
 
     }
 

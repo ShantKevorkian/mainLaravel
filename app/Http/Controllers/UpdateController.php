@@ -20,6 +20,15 @@ class UpdateController extends Controller
     public function update(Request $request)
     {
 
+        $request->validate([
+            'phone' => 'required|string|max:191',
+            'address' => 'required|string|max:191',
+            'city' => 'required|string|max:191',
+            'country' => 'required|string|max:191',
+
+
+
+        ]);
         Detail::updateOrCreate(
             ['user_id' => Auth::id()],
             ['phone' => $request->phone,
@@ -29,8 +38,9 @@ class UpdateController extends Controller
         );
 
 
-        
+
         $user = User::find(Auth::id());
+
         $user->profession()->sync($request->states);
 
 

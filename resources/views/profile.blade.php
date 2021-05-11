@@ -129,15 +129,18 @@
                                 </div>
 
                             </div>
+
+
                             <div class="form-group row">
                                 <label for="profession"
                                        class="col-md-4 col-form-label text-md-right">{{ __('Select Profession') }}</label>
                                 <div class="col-md-6">
                                     <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
+                                        <option value="">Select Country</option>
+                                            @foreach($professions as $profession)
+                                                <option value="{{$profession->id}} " @if(in_array($profession->id,$user_professions)) selected  @endif >{{$profession->name}}</option>
+                                            @endforeach
 
-                                        @foreach($professions as $profession)
-                                        <option value="{{$profession->id}}">{{$profession->name}}</option>
-                                        @endforeach
                                     </select>
                                 </div>
                             </div>
