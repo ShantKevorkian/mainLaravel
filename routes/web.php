@@ -28,5 +28,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-Route::post('/profile/detail', [UpdateController::class, 'update'])->name('detail.update');
-Route::post('/profile/avatar', [ImageController::class, 'upload'])->name('avatar.upload');
+Route::put('/profile/detail', [UpdateController::class, 'update'])->name('detail.update');
+Route::put('/profile/avatar', [ImageController::class, 'upload'])->name('avatar.upload');

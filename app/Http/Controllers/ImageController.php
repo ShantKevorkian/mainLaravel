@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Avatar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Storage;
 use MongoDB\Driver\Session;
 
@@ -21,11 +22,17 @@ class ImageController extends Controller
     public function upload (Request $request){
         $user = auth()->user();
 
-        $path = $request->file('avatar')->store('avatars','public');
         $request->validate([
-            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'avatar' => 'required|image|mimes:jpeg,png,jfif,jpg,gif|max:2048',
         ]);
+
+        if(Avatar::where('user_id',$user->id)->select("path")->first()){
+            Storage::delete(Avatar::where('user_id',$user->id)->select("path")->first()->path);
+        }
+        $path = $request->file('avatar')->store('avatars','public');
+
         Avatar::updateOrCreate(
+
             ['user_id' => $user->id],
             ['original_name' => $request->avatar->getClientOriginalName(),
                 'path' => $path]

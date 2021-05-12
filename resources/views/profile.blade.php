@@ -4,24 +4,20 @@
 
     <div class="container">
         @if($user->avatar)
-            <img class="rounded-circle" src="{{asset('/storage/' . $user->avatar->path)}}" alt=""
-                 style="width: 200px;height:200px">
+            <img class="img-thumbnail rounded-circle" src="{{asset('/storage/' . $user->avatar->path)}}" alt="{{$user->avatar->original_name}}">
         @else
-            <img class="rounded-circle" src="{{asset('/storage/avatars/default.jpg' )}}" alt=""
-                 style="width: 200px;height:200px">
+            <img class="img-thumbnail rounded-circle" src="{{asset('/storage/avatars/default.png' )}}" alt="default.png">
         @endif
 
 
-        <form action="{{route('avatar.upload')}}" method="post" enctype="multipart/form-data">
+        <form action="{{route('avatar.upload')}}" method="POST" enctype="multipart/form-data">
+            @method('PUT')
             {{csrf_field()}}
             <div class="form-group">
                 <input type="file" name="avatar">
             </div>
-            <button class="btn btn-default" type="submit">Upload</button>
+            <button class="btn btn-primary" type="submit">Upload</button>
         </form>
-
-
-        {{--        <img class="img-thumbnail" src="{{asset('/storage/' . session('path'))}}" alt="">--}}
     </div>
 
 
@@ -109,6 +105,7 @@
 
                         <form method="POST" action="{{ route('detail.update') }}">
                             @csrf
+                            @method('PUT')
                             <div class="form-group row">
                                 <label for="phone"
                                        class="col-md-4 col-form-label text-md-right">{{ __('Phone') }}</label>
@@ -163,7 +160,7 @@
                                        class="col-md-4 col-form-label text-md-right">{{ __('Select Profession') }}</label>
                                 <div class="col-md-6">
                                     <select class="js-example-basic-multiple" name="profession[]" multiple="multiple">
-                                        <option value="">Select Country</option>
+
                                         @foreach($professions as $profession)
                                             <option value="{{$profession->id}} "
                                                     @if(in_array($profession->id,$user->professions->pluck('id')->all())) selected @endif >{{$profession->name}}</option>

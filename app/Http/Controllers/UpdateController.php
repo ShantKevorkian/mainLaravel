@@ -16,17 +16,17 @@ class UpdateController extends Controller
         $this->middleware('auth');
     }
 
-
     public function update(Request $request)
     {
         $user = auth()->user();
+
         $request->validate([
             'phone' => 'required|string|max:191',
             'address' => 'required|string|max:191',
             'city' => 'required|string|max:191',
             'country' => 'required|string|max:191',
-
-
+            "professions" => 'nullable|array|',
+            "professions.*"=>'exists:professions,id'
 
         ]);
         Detail::updateOrCreate(
@@ -36,14 +36,7 @@ class UpdateController extends Controller
                 'city' => $request->city,
                 'country' => $request->country]
         );
-
-
-
-
-
         $user->professions()->sync($request->profession);
-
-
 
         return back()->with('successDe', 'Details successfully updated');
     }
