@@ -1,6 +1,26 @@
 @extends('layouts.app')
 
 @section('content')
+
+    <div class="container">
+        <form action="{{route('avatar.upload')}}" method="post" enctype="multipart/form-data">
+            {{csrf_field()}}
+           <div class="form-group">
+               <input type="file" name="avatar">
+           </div>
+            <button class="btn btn-default" type="submit">Upload</button>
+        </form>
+        @if(session('path'))
+
+            <img class="img-thumbnail" src="{{asset('/storage/' . session('path'))}}" alt="">
+        @endif
+        <img class="img-thumbnail" src="{{asset('/storage/' . session('path'))}}" alt="">
+    </div>
+
+
+
+
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -89,7 +109,7 @@
                                 <div class="col-md-6">
                                     <input id="phone" type="text"
                                            class="form-control @error('phone') is-invalid @enderror" name="phone"
-                                           value="{{$user->detail == null ? '' : $user->detail->phone }}" autofocus>
+                                           value="{{optional($user->detail)->phone }}" autofocus>
                                 </div>
                             </div>
 
@@ -101,7 +121,7 @@
                                     <input id="address" type="text"
                                            class="form-control @error('address') is-invalid @enderror"
                                            name="address"
-                                           value="{{ $user->detail == null ? '' : $user->detail->address  }}" autofocus>
+                                           value="{{ optional($user->detail)->address  }}" autofocus>
                                 </div>
                             </div>
 
@@ -112,7 +132,7 @@
                                 <div class="col-md-6">
                                     <input id="city" type="text"
                                            class="form-control @error('city') is-invalid @enderror" name="city"
-                                           value="{{$user->detail == null ? '' : $user->detail->city }}"
+                                           value="{{optional($user->detail)->city }}"
                                            autofocus>
                                 </div>
                             </div>
@@ -125,7 +145,7 @@
                                     <input id="country" type="text"
                                            class="form-control @error('country') is-invalid @enderror"
                                            name="country"
-                                           value="{{$user->detail == null ? '' : $user->detail->country }}" autofocus>
+                                           value="{{optional($user->detail)->country }}" autofocus>
                                 </div>
 
                             </div>
@@ -135,10 +155,10 @@
                                 <label for="profession"
                                        class="col-md-4 col-form-label text-md-right">{{ __('Select Profession') }}</label>
                                 <div class="col-md-6">
-                                    <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
+                                    <select class="js-example-basic-multiple" name="profession[]" multiple="multiple">
                                         <option value="">Select Country</option>
                                             @foreach($professions as $profession)
-                                                <option value="{{$profession->id}} " @if(in_array($profession->id,$user_professions)) selected  @endif >{{$profession->name}}</option>
+                                                <option value="{{$profession->id}} " @if(in_array($profession->id,$user->professions->pluck('id')->all())) selected  @endif >{{$profession->name}}</option>
                                             @endforeach
 
                                     </select>

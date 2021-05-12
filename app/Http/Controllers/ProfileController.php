@@ -17,49 +17,41 @@ class ProfileController extends Controller
             $this->middleware('auth');
     }
 
-
-
-
-
     public function index()
     {
-        $user =User::with(['profession'])->find(Auth::id());
-        $profArr =[];
-        foreach ($user->profession as $profession){
-
-            array_push($profArr ,$profession['id']);
-        }
-
+            $user = auth()->user()->load('detail','professions','avatar');
+            dd($user->avatar);
 
         return view('profile')
-            ->with('user', User::with(['detail'])->find(Auth::id()))
-            ->with('professions', Profession::all())
-            ->with("user_professions",$profArr);
+            ->with('user', auth()->user()->load('detail','professions','avatar'))
+            ->with('professions', Profession::all());
+
+
+
 
     }
 
     public function update(Request $request)
     {
+        $user=auth()->user();
+        $request->validate([
+            'name' => 'required|string|max:191',
+            'email' => [
+                'required',
+                Rule::unique('users')->ignore($user->id)
+            ],
+            'password' => 'nullable|string',
 
-            $request->validate([
-                'name' => 'required|string|max:191',
-                'email' => [
-                    'required',
-                    Rule::unique('users')->ignore(Auth::id())
-                ],
-                'password' => 'nullable|string',
+        ]);
 
-            ]);
-            User::where('id', Auth::id())->update([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => $request->password ? bcrypt($request->password) : Auth::user()->password
-            ]);
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password ? bcrypt($request->password) : $user->password
+        ]);
 
 
         return back()->with('successProf', 'Profile successfully updated');
-
     }
-
 }
 

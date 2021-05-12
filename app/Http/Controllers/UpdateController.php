@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Detail;
 use App\Models\User;
-use App\Models\UserProfession;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,7 +19,7 @@ class UpdateController extends Controller
 
     public function update(Request $request)
     {
-
+        $user = auth()->user();
         $request->validate([
             'phone' => 'required|string|max:191',
             'address' => 'required|string|max:191',
@@ -30,7 +30,7 @@ class UpdateController extends Controller
 
         ]);
         Detail::updateOrCreate(
-            ['user_id' => Auth::id()],
+            ['user_id' => $user->id],
             ['phone' => $request->phone,
                 'address' => $request->address,
                 'city' => $request->city,
@@ -39,9 +39,9 @@ class UpdateController extends Controller
 
 
 
-        $user = User::find(Auth::id());
 
-        $user->profession()->sync($request->states);
+
+        $user->professions()->sync($request->profession);
 
 
 

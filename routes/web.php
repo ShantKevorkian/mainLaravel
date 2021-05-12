@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\ImageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UpdateController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +28,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
-
-
-Route::post('/profile', [UpdateController::class, 'update'])->name('detail.update');
+Route::post('/profile/detail', [UpdateController::class, 'update'])->name('detail.update');
+Route::post('/profile/avatar', [ImageController::class, 'upload'])->name('avatar.upload');

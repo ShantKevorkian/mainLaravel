@@ -45,8 +45,14 @@ class User extends Authenticatable
         return $this->hasOne(Detail::class);
     }
 
-    public function profession()
+    public function professions()
     {
-        return $this->belongsToMany(Profession::class,'user_professions', 'user_id', 'profession_id');
+        return $this->belongsToMany(Profession::class,'user_professions');
     }
+
+    public function avatar()
+    {
+        return $this->hasOne(Avatar::class,'user_id');
+    }
+
 }

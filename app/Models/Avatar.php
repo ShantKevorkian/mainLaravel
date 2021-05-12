@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserProfession extends Model
+class Avatar extends Model
 {
+    public $timestamps = false;
     use HasFactory;
-
     protected $fillable = [
         'user_id',
-        'profession_id',
+        'original_name',
+        'path',
+        'processed',
 
     ];
-
-
 
 }
