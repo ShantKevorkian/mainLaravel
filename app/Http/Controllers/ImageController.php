@@ -14,23 +14,21 @@ class ImageController extends Controller
 
     public function __construct()
     {
-
         $this->middleware('auth');
     }
 
 
     public function upload (Request $request){
         $user = auth()->user();
-
         $request->validate([
             'avatar' => 'required|image|mimes:jpeg,png,jfif,jpg,gif|max:2048',
         ]);
 
-        if(Avatar::where('user_id',$user->id)->select("path")->first()){
-            Storage::delete(Avatar::where('user_id',$user->id)->select("path")->first()->path);
+        if($avatar = Avatar::where('user_id',$user->id)->select("path")->first()){
+            Storage::delete($avatar->path);
         }
-        $path = $request->file('avatar')->store('avatars','public');
 
+        $path = $request->file('avatar')->store('avatars','public');
         Avatar::updateOrCreate(
 
             ['user_id' => $user->id],

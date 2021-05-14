@@ -23,7 +23,7 @@ class UpdateController extends Controller
         $request->validate([
             'phone' => 'required|string|max:191',
             'address' => 'required|string|max:191',
-            'city' => 'required|string|max:191',
+            'city' => 'nullable|string|max:191',
             'country' => 'required|string|max:191',
             "professions" => 'nullable|array|',
             "professions.*"=>'exists:professions,id'

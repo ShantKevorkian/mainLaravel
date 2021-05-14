@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UpdateController;
-
 
 
 /*
@@ -25,8 +25,13 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::put('/profile/detail', [UpdateController::class, 'update'])->name('detail.update');
 Route::put('/profile/avatar', [ImageController::class, 'upload'])->name('avatar.upload');
+Route::get('/posts', [PostController::class, 'index'])->name('post.index');
+Route::get('/posts/{id}', function ($id) {
+    return redirect()->route('editPost', ['id' => $id]);
+})->name('');
+
+//Route::put('/posts/update', [PostController::class, 'update'])->name('post.update');

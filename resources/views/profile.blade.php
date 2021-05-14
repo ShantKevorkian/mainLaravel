@@ -1,7 +1,8 @@
 @extends('layouts.app')
-
+@section("navbar")
+    <a class="nav-link" href="{{ route('post.index') }}">{{ __('Posts') }}</a>
+@endsection
 @section('content')
-
     <div class="container">
         @if($user->avatar)
             <img class="img-thumbnail rounded-circle" src="{{asset('/storage/' . $user->avatar->path)}}" alt="{{$user->avatar->original_name}}">
@@ -19,10 +20,6 @@
             <button class="btn btn-primary" type="submit">Upload</button>
         </form>
     </div>
-
-
-
-
 
     <div class="container">
         <div class="row justify-content-center">
