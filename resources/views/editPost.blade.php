@@ -14,7 +14,7 @@
                         @if(session('successDe'))
                             <span class="alert alert-success d-flex justify-content-center p-2">{{ session('successDe') }}</span>
                         @endif
-                        <form  action="{{ route('post.update') }}"  method="POST" enctype="multipart/form-data">
+                        <form  action="{{ route('post.update',['id'=>$post->id])}}"  method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="form-group row">
@@ -22,8 +22,8 @@
                                        class="col-md-4 col-form-label text-md-right">{{ __('Title') }}</label>
                                 <div class="col-md-6">
                                     <input id="title" type="text"
-                                           class="form-control @error('phone') is-invalid @enderror" name="title"
-                                           value="" autofocus>
+                                           class="form-control @error('title') is-invalid @enderror" name="title"
+                                           value="{{$post->title}}" autofocus>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -31,20 +31,36 @@
                                        class="col-md-4 col-form-label text-md-right">{{ __('Description') }}</label>
                                 <div class="col-md-6">
                                     <input id="description" type="text"
-                                           class="form-control @error('address') is-invalid @enderror"
+                                           class="form-control @error('description') is-invalid @enderror"
                                            name="description"
-                                           value="" autofocus>
+                                           value="{{$post->description}}" autofocus>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="description"
+                                <label for="image"
                                        class="col-md-4 col-form-label text-md-right">{{ __('Choose Image') }}</label>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="file" name="image">
+                                        <input type="file" name="image" class="form-control @error('image') is-invalid @enderror"">
                                     </div>
                                 </div>
                             </div>
+                            @error('title')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+                            @error('description')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+                            @error('image')
+                            <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
+
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-4">
 

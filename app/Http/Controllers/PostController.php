@@ -13,10 +13,10 @@ class PostController extends Controller
 //        $this->middleware('auth');
 //    }
 
-    public function index ()
+    public function index()
     {
-        $user =auth()->user();
-        return view("posts") ->with('posts', Post::where('user_id' ,$user->id)->get());
+        $user = auth()->user();
+        return view("posts")->with('posts', Post::where('user_id', $user->id)->get());
     }
 
 //    public function create ()
@@ -24,10 +24,24 @@ class PostController extends Controller
 //        return view("")
 //    }
 //
-    public function update ($id)
+    public function update(Request $request)
     {
-        $user =auth()->user();
-        return view("editPost")->with('posts', Post::where('user_id' ,$user->id)->first($id));
+        $user = auth()->user();
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jfif,jpg,gif|max:2048',
+            'title' =>'required|string|max:255',
+            'description' =>'required|string'
+        ]);
+        $path = $request->file('image')->store('postImages', 'public');
+
+        Post::where('id', $request->id)->update(
+            ['original_name' => $request->image->getClientOriginalName(),
+                'user_id' => $user->id,
+                'path' => $path,
+                'title' => $request->title,
+                'description' => $request->description]);
+
+        return redirect()->route("post.index",$path);
     }
 //
 //    public function delete ()

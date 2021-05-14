@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PostController;
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UpdateController;
@@ -31,7 +32,6 @@ Route::put('/profile/detail', [UpdateController::class, 'update'])->name('detail
 Route::put('/profile/avatar', [ImageController::class, 'upload'])->name('avatar.upload');
 Route::get('/posts', [PostController::class, 'index'])->name('post.index');
 Route::get('/posts/{id}', function ($id) {
-    return redirect()->route('editPost', ['id' => $id]);
-})->name('');
-
-//Route::put('/posts/update', [PostController::class, 'update'])->name('post.update');
+    return view('editPost',['post' => Post::where('id' ,$id)->first()]);
+})->name('post.edit');
+Route::put('/posts/update/{id}', [PostController::class, 'update'])->name('post.update');
