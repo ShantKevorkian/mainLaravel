@@ -17,4 +17,9 @@ class Profession extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
+    public function posts()
+    {
+        return $this->belongsToMany(Post::class);
+    }
 }

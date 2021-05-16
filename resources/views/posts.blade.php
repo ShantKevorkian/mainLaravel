@@ -1,12 +1,10 @@
 @extends('layouts.app')
 @section("navbar")
-    <a class="nav-link" href="">{{ __('Create Post') }}</a>
-    {{--    {{ route('post.create') }}--}}
+    <a class="nav-link" href="{{route('post.new')}} ">{{ __('Create Post') }}</a>
 @endsection
 @section('content')
 
     @foreach($posts as $post)
-
         <div class="card">
             <div class="card-header">
                 <div class="d-flex">
@@ -14,27 +12,28 @@
                     <div class="p-2">Updated at {{$post->updated_at}}</div>
 
                 </div>
-
             </div>
             <div class="d-flex flex-row">
                 <div class="p-2">
                     <div class="card" style="width: 18rem" >
-                        <img class="card-img-top" src="{{asset('/storage/' . $post->path)}}" alt="Card image cap">
+                        <img class="card-img-top" src="{{asset('/storage/' . optional($post->postImage)->path)}}" alt="Card image cap">
                     </div>
                 </div>
                 <div class="p-2">
                     <div class="card-body">
                         <h4 class="card-title">{{$post->title}}</h4>
                         <p class="card-text">{{$post->description}}</p>
+                        <p class="card-text">Profession`
+                            @foreach($post->professions as $profession)
+                            {{$profession->name.","}}
+                            @endforeach
+                        </p>
+
                         <a  href="{{route('post.edit',['id'=>$post->id])}}" class="btn btn-primary align-self-end">Edit</a>
+                        <a  href="{{route('post.delete',['id'=>$post->id])}}" class="btn btn-primary align-self-end">Delete</a>
                     </div>
                 </div>
-
-
             </div>
-
-
-
         </div>
     @endforeach
 @endsection

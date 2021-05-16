@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section("navbar")
     <a class="nav-link" href="{{route("post.index")}}">{{ __('Posts') }}</a>
-    {{--    {{ route('post.create') }}--}}
 @endsection
 @section('content')
 
@@ -43,6 +42,20 @@
                                     <div class="form-group">
                                         <input type="file" name="image" class="form-control @error('image') is-invalid @enderror"">
                                     </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="profession"
+                                       class="col-md-4 col-form-label text-md-right">{{ __('Select Profession') }}</label>
+                                <div class="col-md-6">
+                                    <select class="js-example-basic-multiple" name="profession[]" multiple="multiple">
+
+                                        @foreach($professions as $profession)
+                                            <option value="{{$profession->id}} "
+                                                    @if(in_array($profession->id,$post->professions->pluck('id')->all())) selected @endif >{{$profession->name}}</option>
+                                        @endforeach
+
+                                    </select>
                                 </div>
                             </div>
                             @error('title')

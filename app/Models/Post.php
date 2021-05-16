@@ -12,13 +12,20 @@ class Post extends Model
         'user_id',
         'title',
         'description',
-        'original_name',
-        'path',
-        'processed'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function postImage()
+    {
+        return $this->hasOne(PostImage::class);
+    }
+
+    public function professions()
+    {
+        return $this->belongsToMany(Profession::class,"post_professions");
     }
 }

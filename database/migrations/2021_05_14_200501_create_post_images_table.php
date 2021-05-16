@@ -15,6 +15,13 @@ class CreatePostImagesTable extends Migration
     {
         Schema::create('post_images', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('post_id');
+            $table->foreign('post_id')->references('id')->on('posts');
+
+//            $table->foreignId('post_id')->constrained();
+            $table->string('original_name')->nullable();
+            $table->string('path')->nullable();
+            $table->boolean('processed')->default(false);
             $table->timestamps();
         });
     }

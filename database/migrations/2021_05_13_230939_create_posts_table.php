@@ -18,8 +18,6 @@ class CreatePostsTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->string('title');
             $table->text('description');
-            $table->string('original_name')->nullable();
-            $table->string('path')->nullable();
             $table->boolean('processed')->default(false);
             $table->timestamps();
         });

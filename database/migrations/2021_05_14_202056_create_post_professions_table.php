@@ -14,8 +14,8 @@ class CreatePostProfessionsTable extends Migration
     public function up()
     {
         Schema::create('post_professions', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->foreignId('post_id')->constrained();
+            $table->foreignId('profession_id')->constrained();
         });
     }
 
