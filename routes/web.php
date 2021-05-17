@@ -32,13 +32,8 @@ Route::put('/profile', [ProfileController::class, 'update'])->name('profile.upda
 Route::put('/profile/detail', [UpdateController::class, 'update'])->name('detail.update');
 Route::put('/profile/avatar', [ImageController::class, 'upload'])->name('avatar.upload');
 Route::get('/posts', [PostController::class, 'index'])->name('post.index');
-Route::get('/posts/{id}', function ($id) {
-    return view('editPost',['post' => Post::where('id' ,$id)->first(),
-                                 "professions"=>Profession::all()]);
-})->name('post.edit');
+Route::get('/posts/{id}',[PostController::class, 'showUpdate'])->name('post.edit');
 Route::put('/posts/update/{id}', [PostController::class, 'update'])->name('post.update');
-Route::get("post/new",function (){
-    return view("createPost",["professions"=>Profession::all()]);
-})->name("post.new");
+Route::get("post/new",[PostController::class, 'showNewPost'])->name("post.new");
 Route::post("post/create",[PostController::class,"create"])->name('post.create');
 Route::get('/posts/delete/{id}', [PostController::class, 'delete'])->name('post.delete');

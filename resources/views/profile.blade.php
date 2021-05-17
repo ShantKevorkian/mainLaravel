@@ -7,7 +7,7 @@
         @if($user->avatar)
             <img class="img-thumbnail rounded-circle" src="{{asset('/storage/' . $user->avatar->path)}}" alt="{{$user->avatar->original_name}}">
         @else
-            <img class="img-thumbnail rounded-circle" src="{{asset('/storage/avatars/default.png' )}}" alt="default.png">
+            <img class="img-thumbnail rounded-circle" src="{{asset('/images/default.png' )}}" alt="default.png">
         @endif
 
 

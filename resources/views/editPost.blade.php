@@ -13,7 +13,7 @@
                         @if(session('successDe'))
                             <span class="alert alert-success d-flex justify-content-center p-2">{{ session('successDe') }}</span>
                         @endif
-                        <form  action="{{ route('post.update',['id'=>$post->id])}}"  method="POST" enctype="multipart/form-data">
+                        <form  action="{{ route('post.update',['id' => $post->id])}}"  method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="form-group row">

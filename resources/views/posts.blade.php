@@ -16,7 +16,8 @@
             <div class="d-flex flex-row">
                 <div class="p-2">
                     <div class="card" style="width: 18rem" >
-                        <img class="card-img-top" src="{{asset('/storage/' . optional($post->postImage)->path)}}" alt="Card image cap">
+
+                        <img class="card-img-top" src="{{ $post->postImage ? asset('/storage/'.$post->postImage->path) : asset('/images/postDefault.png') }}" alt="Card image cap">
                     </div>
                 </div>
                 <div class="p-2">

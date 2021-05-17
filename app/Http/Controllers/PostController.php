@@ -13,11 +13,11 @@ use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
 
 class PostController extends Controller
 {
-//    public function __construct()
-//    {
-//
-//        $this->middleware('auth');
-//    }
+    public function __construct()
+    {
+
+        $this->middleware('auth');
+    }
 
     public function index()
     {
@@ -25,7 +25,7 @@ class PostController extends Controller
         $user = auth()->user();
 
         return view("posts")
-            ->with('posts', Post::where('user_id', $user->id)->get()->load(['postImage','professions']))
+            ->with('posts', Post::where('user_id', $user->id)->get()->load(['postImage', 'professions']))
             ->with('professions', Profession::all());
     }
 
@@ -41,12 +41,13 @@ class PostController extends Controller
         Post::create(
             ['user_id' => $user->id,
                 'title' => $request->title,
-                'description' => $request->description]);
-        $postLastId = DB::table('posts')->where('user_id',$user->id)->orderBy('id', 'desc')->first()->id;
+                'description' => $request->description
+            ]);
+        $postLastId = DB::table('posts')->where('user_id', $user->id)->orderBy('id', 'desc')->first()->id;
         $post = Post::where('id', $postLastId);
         $path = $request->file('image')->store('postImages', 'public');
         PostImage::create(
-            ['post_id' => DB::table('posts')->where('user_id',$user->id)->orderBy('id', 'desc')->first()->id,
+            ['post_id' => DB::table('posts')->where('user_id', $user->id)->orderBy('id', 'desc')->first()->id,
                 'original_name' => $request->image->getClientOriginalName(),
                 'path' => $path,]);
         $post->where('user_id', $user->id)->first()->professions()->sync($request->profession);
@@ -57,6 +58,8 @@ class PostController extends Controller
     {
         $user = auth()->user();
         $post = Post::where('id', $request->id);
+        $image = PostImage::where("post_id", $request->id);
+        Storage::delete($image->select("path")->first()->path);
 
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jfif,jpg,gif|max:2048',
@@ -65,9 +68,11 @@ class PostController extends Controller
         ]);
         $path = $request->file('image')->store('postImages', 'public');
         $post->update(
-            ['user_id' => $user->id,
+            [
+                'user_id' => $user->id,
                 'title' => $request->title,
-                'description' => $request->description]);
+                'description' => $request->description
+            ]);
         //Here updateOrCreate for testing but in real must be Update,TODO
         PostImage::where('post_id', $request->id)->updateOrCreate(
             ['post_id' => $request->id],
@@ -75,19 +80,42 @@ class PostController extends Controller
                 'path' => $path,]);
 
         $post->where('user_id', $user->id)->first()->professions()->sync($request->profession);
+
         return redirect()->route("post.index", $path);
     }
 
-    public function delete (Request $request)
+    public function delete(Request $request)
     {
 
-        $image = PostImage::where("post_id",$request->id);
-        Storage::delete($image->select("path")->first()->path);
+        $image = PostImage::where("post_id", $request->id);
+        //In real there no need for if because each post must have image TODO
+
+        if ($image->select("path")->first()) {
+            Storage::delete($image->select("path")->first()->path);
+        }
+
         $image->delete();
-        PostProfession::where("post_id",$request->id)->delete();
+        PostProfession::where("post_id", $request->id)->delete();
         Post::where('id', $request->id)->delete();
         return redirect()->route('post.index');
     }
 
+    public function showUpdate($id)
+    {
+        $userPostsId = Post::where("user_id", auth()->user()->id)->pluck("id")->toArray();
+        $condition = in_array($id, $userPostsId);
+
+        abort_if(!$condition, 403);
+
+        return view('editPost')
+            ->with('post', Post::where('id', $id)->first())
+            ->with("professions", Profession::all());
+    }
+
+    public function showNewPost()
+    {
+        return view('createPost')
+            ->with("professions", Profession::all());
+    }
 
 }
