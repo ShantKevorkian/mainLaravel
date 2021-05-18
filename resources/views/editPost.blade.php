@@ -13,7 +13,7 @@
                         @if(session('successDe'))
                             <span class="alert alert-success d-flex justify-content-center p-2">{{ session('successDe') }}</span>
                         @endif
-                        <form  action="{{ route('post.update',['id' => $post->id])}}"  method="POST" enctype="multipart/form-data">
+                        <form  action="{{ route('post.update',['id'=>$post->id])}}"  method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="form-group row">
@@ -29,10 +29,9 @@
                                 <label for="description"
                                        class="col-md-4 col-form-label text-md-right">{{ __('Description') }}</label>
                                 <div class="col-md-6">
-                                    <input id="description" type="text"
+                                    <textarea id="description" type="text"
                                            class="form-control @error('description') is-invalid @enderror"
-                                           name="description"
-                                           value="{{$post->description}}" autofocus>
+                                           name="description" autofocus>{{$post->description}}</textarea>
                                 </div>
                             </div>
                             <div class="form-group row">

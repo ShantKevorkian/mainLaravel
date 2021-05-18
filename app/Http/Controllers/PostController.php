@@ -15,15 +15,12 @@ class PostController extends Controller
 {
     public function __construct()
     {
-
         $this->middleware('auth');
     }
 
     public function index()
     {
-
         $user = auth()->user();
-
         return view("posts")
             ->with('posts', Post::where('user_id', $user->id)->get()->load(['postImage', 'professions']))
             ->with('professions', Profession::all());
@@ -56,16 +53,18 @@ class PostController extends Controller
 
     public function update(Request $request)
     {
-        $user = auth()->user();
-        $post = Post::where('id', $request->id);
-        $image = PostImage::where("post_id", $request->id);
-        Storage::delete($image->select("path")->first()->path);
 
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jfif,jpg,gif|max:2048',
             'title' => 'required|string|max:255',
             'description' => 'required|string'
         ]);
+        $user = auth()->user();
+        $post = Post::where('id', $request->id);
+        $image = PostImage::where("post_id", $request->id);
+        if ($image->select("path")->first()) {
+            Storage::delete($image->select("path")->first()->path);
+        }
         $path = $request->file('image')->store('postImages', 'public');
         $post->update(
             [
@@ -78,9 +77,7 @@ class PostController extends Controller
             ['post_id' => $request->id],
             ['original_name' => $request->image->getClientOriginalName(),
                 'path' => $path,]);
-
         $post->where('user_id', $user->id)->first()->professions()->sync($request->profession);
-
         return redirect()->route("post.index", $path);
     }
 
@@ -95,21 +92,20 @@ class PostController extends Controller
         }
 
         $image->delete();
+
         PostProfession::where("post_id", $request->id)->delete();
         Post::where('id', $request->id)->delete();
+
         return redirect()->route('post.index');
     }
 
-    public function showUpdate($id)
+    public function showUpdate(Post $post)
     {
-        $userPostsId = Post::where("user_id", auth()->user()->id)->pluck("id")->toArray();
-        $condition = in_array($id, $userPostsId);
-
-        abort_if(!$condition, 403);
+        abort_if($post->user_id !==  auth()->id(), 403);
 
         return view('editPost')
-            ->with('post', Post::where('id', $id)->first())
-            ->with("professions", Profession::all());
+            ->with('post', $post)
+            ->with('professions', Profession::all());
     }
 
     public function showNewPost()

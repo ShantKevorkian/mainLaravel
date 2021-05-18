@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\FeedController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PostController;
 use App\Models\Post;
 use App\Models\Profession;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UpdateController;
+use App\Http\Controllers\DetailController;
 
 
 /*
@@ -26,13 +27,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [FeedController::class, 'index'])->name('home');
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-Route::put('/profile/detail', [UpdateController::class, 'update'])->name('detail.update');
+Route::put('/profile/detail', [DetailController::class, 'update'])->name('detail.update');
 Route::put('/profile/avatar', [ImageController::class, 'upload'])->name('avatar.upload');
 Route::get('/posts', [PostController::class, 'index'])->name('post.index');
-Route::get('/posts/{id}',[PostController::class, 'showUpdate'])->name('post.edit');
+Route::get('/posts/{post}',[PostController::class, 'showUpdate'])->name('post.edit');
 Route::put('/posts/update/{id}', [PostController::class, 'update'])->name('post.update');
 Route::get("post/new",[PostController::class, 'showNewPost'])->name("post.new");
 Route::post("post/create",[PostController::class,"create"])->name('post.create');

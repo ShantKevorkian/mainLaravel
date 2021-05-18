@@ -30,7 +30,7 @@
                             @endforeach
                         </p>
 
-                        <a  href="{{route('post.edit',['id'=>$post->id])}}" class="btn btn-primary align-self-end">Edit</a>
+                        <a  href="{{route('post.edit',['post'=>$post->id])}}" class="btn btn-primary align-self-end">Edit</a>
                         <a  href="{{route('post.delete',['id'=>$post->id])}}" class="btn btn-primary align-self-end">Delete</a>
                     </div>
                 </div>
