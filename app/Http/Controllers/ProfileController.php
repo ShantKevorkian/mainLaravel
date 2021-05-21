@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Gallery;
+use App\Models\GalleryImage;
 use App\Models\Profession;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -15,14 +17,15 @@ class ProfileController extends Controller
     public function __construct()
     {
             $this->middleware('auth');
-
     }
 
     public function index()
     {
         return view('profile')
             ->with('user', auth()->user()->load('detail','professions','avatar'))
+            ->with('galleries',Gallery::where('user_id',auth()->user()->id)->get()->load('galleryImages'))
             ->with('professions', Profession::all());
+
     }
 
     public function update(Request $request)
@@ -37,7 +40,6 @@ class ProfileController extends Controller
             'password' => 'nullable|string',
 
         ]);
-
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
@@ -45,5 +47,13 @@ class ProfileController extends Controller
         ]);
         return back()->with('successProf', 'Profile successfully updated');
     }
+
+    public function show(User $guest)
+    {
+        return view("profileGuest")
+            ->with('galleries',Gallery::where('user_id',$guest->id)->get()->load('galleryImages'))
+            ->with('guest',$guest->load(['avatar','professions','detail']));
+    }
+
 }
 

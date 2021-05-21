@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section("navbar")
     <a class="nav-link" href="{{route('post.new')}} ">{{ __('Create Post') }}</a>
+{{--    <a class="nav-link" href="{{route('post.new')}} ">{{ __('Create Gallery') }}</a>--}}
 @endsection
 @section('content')
 
@@ -23,10 +24,10 @@
                 <div class="p-2">
                     <div class="card-body">
                         <h4 class="card-title">{{$post->title}}</h4>
-                        <p class="card-text">{{$post->description}}</p>
+                        <p class="card-text">{{Str::limit($post->description,250)}}</p>
                         <p class="card-text">Profession`
                             @foreach($post->professions as $profession)
-                            {{$profession->name.","}}
+                                {{$profession->name.","}}
                             @endforeach
                         </p>
 

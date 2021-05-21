@@ -11,12 +11,10 @@ use MongoDB\Driver\Session;
 
 class ImageController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
     }
-
 
     public function upload (Request $request){
         $user = auth()->user();
@@ -35,11 +33,6 @@ class ImageController extends Controller
             ['original_name' => $request->avatar->getClientOriginalName(),
                 'path' => $path]
         );
-
-
-
-
            return back()->with('success','Image  uploaded');
-
     }
 }

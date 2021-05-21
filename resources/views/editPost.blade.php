@@ -13,7 +13,7 @@
                         @if(session('successDe'))
                             <span class="alert alert-success d-flex justify-content-center p-2">{{ session('successDe') }}</span>
                         @endif
-                        <form  action="{{ route('post.update',['id'=>$post->id])}}"  method="POST" enctype="multipart/form-data">
+                        <form  action="{{ route('post.update',['id' => $post->id])}}"  method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="form-group row">
@@ -39,7 +39,7 @@
                                        class="col-md-4 col-form-label text-md-right">{{ __('Choose Image') }}</label>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="file" name="image" class="form-control @error('image') is-invalid @enderror"">
+                                        <input type="file" name="image" class="form-control @error('image') is-invalid @enderror">
                                     </div>
                                 </div>
                             </div>

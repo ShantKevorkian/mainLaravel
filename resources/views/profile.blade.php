@@ -5,7 +5,8 @@
 @section('content')
     <div class="container">
         @if($user->avatar)
-            <img class="img-thumbnail rounded-circle" src="{{asset('/storage/' . $user->avatar->path)}}" alt="{{$user->avatar->original_name}}">
+            <img class="img-thumbnail rounded-circle" src="{{asset('/storage/' . $user->avatar->path)}}"
+                 alt="{{$user->avatar->original_name}}">
         @else
             <img class="img-thumbnail rounded-circle" src="{{asset('/images/default.png' )}}" alt="default.png">
         @endif
@@ -175,6 +176,40 @@
                                 </div>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card mb-5">
+                    <div class="card-header">
+                        <div class="d-flex">
+                            <div class="mr-auto p-2">Gallery</div>
+                            <a class="nav-link" href="{{ route('gallery.create') }}">{{ __('Create Gallery') }}</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card mb-5">
+                            <div class="row">
+                                @foreach($galleries as $gallery)
+                                    <div class="col-md-6">
+                                        <div class="text-center">
+                                            <div>
+                                                <p>{{$gallery->title}}</p>
+                                            </div>
+                                            <div>
+                                                <a href="{{route('gallery.show',['gallery'=>$gallery->id])}}"><img class="rounded-circle" style="width: 200px;height: 200px"
+                                                     src="{{asset('/storage/'.$gallery->galleryImages[0]->path)}}"
+                                                     alt="Card image cap"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

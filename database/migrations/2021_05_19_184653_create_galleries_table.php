@@ -4,19 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProfessionsTable extends Migration
+class CreateGalleriesTable extends Migration
 {
     public function up()
     {
-        Schema::create('professions', function (Blueprint $table) {
+        Schema::create('galleries', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('user_id')->constrained();
+            $table->string('title');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('professions');
+        Schema::dropIfExists('galleries');
     }
 }

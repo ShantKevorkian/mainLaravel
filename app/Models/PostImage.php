@@ -13,7 +13,6 @@ class PostImage extends Model
         'original_name',
         'path',
         'processed',
-
     ];
     public function post()
     {

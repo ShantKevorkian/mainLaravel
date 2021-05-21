@@ -5,18 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Avatar extends Model
+class Gallery extends Model
 {
-    public $timestamps = false;
     use HasFactory;
     protected $fillable = [
         'user_id',
-        'original_name',
-        'path',
-        'processed',
+        'title',
     ];
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function galleryImages()
+    {
+        return $this->hasMany(GalleryImage::class);
     }
 }
