@@ -40,7 +40,7 @@ Route::prefix('profile')->group(function (){
 Route::resources([
     'posts'   => PostController::class,
     'gallery' => GalleryController::class
-]); 
+]);
 
 Route::delete('/gallery/delete/{gallery}/{id}/',[GalleryController::class,'deleteImage'])->name('gallery.deleteImage');
 
