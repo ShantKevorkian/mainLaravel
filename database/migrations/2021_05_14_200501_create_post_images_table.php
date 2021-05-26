@@ -12,7 +12,6 @@ class CreatePostImagesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('post_id');
             $table->foreign('post_id')->references('id')->on('posts');
-//            $table->foreignId('post_id')->constrained();
             $table->string('original_name')->nullable();
             $table->string('path')->nullable();
             $table->boolean('processed')->default(false);

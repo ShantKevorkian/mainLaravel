@@ -22,105 +22,102 @@ class PostController extends Controller
 
     public function index()
     {
-        $user = auth()->user();
-        return view("posts")
-            ->with('posts', Post::where('user_id', $user->id)->get()->load(['postImage', 'professions']))
+        $posts = Post::with(['postImage', 'professions'])->where('user_id', auth()->id())->get();
+
+        return view('posts.index')
+            ->with('posts', $posts)
             ->with('professions', Profession::all());
     }
 
-    public function create(Request $request)
+    public function create()
     {
-
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jfif,jpg,gif|max:2048',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string'
-        ]);
-        $user = auth()->user();
-
-        Post::create([
-                'user_id' => $user->id,
-                'title' => $request->title,
-                'description' => $request->description]);
-        $postLastId = DB::table('posts')->where('user_id', $user->id)->orderBy('id', 'desc')->first()->id;
-        $post = Post::where('id', $postLastId);
-        $path = $request->file('image')->store('postImages', 'public');
-
-        PostImage::create([
-                'post_id' => DB::table('posts')->where('user_id', $user->id)->orderBy('id', 'desc')->first()->id,
-                'original_name' => $request->image->getClientOriginalName(),
-                'path' => $path,]);
-        $post->where('user_id', $user->id)->first()->professions()->sync($request->profession);
-        return redirect()->route("post.index");
+        return view('posts.create')->with('professions', Profession::all());
     }
 
-    public function update(Request $request)
-    {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jfif,jpg,gif|max:2048',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string'
-        ]);
-        $user = auth()->user();
-        $post = Post::where('id', $request->id);
-        $image = PostImage::where("post_id", $request->id);
-
-        if ($image->select("path")->first()) {
-            Storage::delete($image->select("path")->first()->path);
-        }
-
-        $path = $request->file('image')->store('postImages', 'public');
-        $post->update(
-            [
-                'user_id' => $user->id,
-                'title' => $request->title,
-                'description' => $request->description
-            ]);
-        //Here updateOrCreate for testing but in real must be Update,TODO
-        PostImage::where('post_id', $request->id)->updateOrCreate(
-            ['post_id' => $request->id],
-            ['original_name' => $request->image->getClientOriginalName(),
-                'path' => $path,]);
-        $post->where('user_id', $user->id)->first()->professions()->sync($request->profession);
-        return redirect()->route("post.index", $path);
-    }
-
-    public function delete(Request $request)
-    {
-        $image = PostImage::where("post_id", $request->id);
-        //In real there no need for if because each post must have image TODO
-
-        if ($image->select("path")->first())
-        {
-            Storage::delete($image->select("path")->first()->path);
-        }
-
-        $image->delete();
-        PostProfession::where("post_id", $request->id)->delete();
-        Post::where('id', $request->id)->delete();
-
-        return redirect()->route('post.index');
-    }
-
-    public function postDetail(Post $post)
-    {
-        return view('postDetail')
-            ->with('post',$post->load('user','postImage'))
-            ->with("avatar",Avatar::where('user_id',$post->user_id)->first());
-    }
-
-    public function showUpdate(Post $post)
+    public function edit(Post $post)
     {
         abort_if($post->user_id !==  auth()->id(), 403);
-        return view('editPost')
+
+        return view('posts.edit')
             ->with('post', $post)
             ->with('professions', Profession::all());
     }
 
-    public function showNewPost()
+    public function show(Post $post)
     {
-        return view('createPost')
-            ->with("professions", Profession::all());
+        return view('posts.show')
+            ->with('post', $post->load('user.avatar', 'postImage'));
     }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jfif,jpg,gif|max:2048',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string'
+        ]);
+
+        $path = $request->file('image')->store('postImages', 'public');
+
+        $post = Post::create([
+                'user_id' => auth()->id(),
+                'title' => $request->title,
+                'description' => $request->description]);
+
+        $post->postImage()->create([
+                'post_id' => $post->id,
+                'original_name' => $request->image->getClientOriginalName(),
+                'path' => $path,
+            ]);
+
+        $post->professions()->sync($request->profession);
+
+        return redirect()->route('posts.index');
+    }
+
+    public function update(Request $request, Post $post)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jfif,jpg,gif|max:2048',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string'
+        ]);
+
+        if ($post->postImage()->exists()) {
+            Storage::delete($post->postImage->path);
+        }
+
+        $path = $request->file('image')->store('postImages', 'public');
+
+        $post->update([
+            'title' => $request->title,
+            'description' => $request->description
+        ]);
+
+        PostImage::updateOrCreate(
+            ['post_id' => $post->id],
+            [
+                'original_name' => $request->image->getClientOriginalName(),
+                'path' => $path,
+            ]
+        );
+
+        $post->professions()->sync($request->professions);
+
+        return redirect()->route('postss.index', $path);
+    }
+
+    public function destroy(Post $post)
+    {
+        if ($post->postImage()->exists())
+        {
+            Storage::delete($post->postImage()->path);
+            $post->postImage()->delete();
+        }
+
+        $post->professions()->delete();
+        $post->delete();
+
+        return redirect()->route('posts.index');
+    }
 }

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section("navbar")
-    <a class="nav-link" href="{{ route('post.index') }}">{{ __('Posts') }}</a>
+    <a class="nav-link" href="{{ route('posts.index') }}">{{ __('Posts') }}</a>
 @endsection
 @section('content')
     <div class="container align-content-center">

@@ -16,20 +16,20 @@ class ImageController extends Controller
         $this->middleware('auth');
     }
 
-    public function upload (Request $request){
-        $user = auth()->user();
+    public function store (Request $request){
+        $userId = auth()->id();
         $request->validate([
             'avatar' => 'required|image|mimes:jpeg,png,jfif,jpg,gif|max:2048',
         ]);
 
-        if($avatar = Avatar::where('user_id',$user->id)->select("path")->first()){
+        if($avatar = Avatar::where('user_id',$userId)->select("path")->first()){
             Storage::delete($avatar->path);
         }
 
         $path = $request->file('avatar')->store('avatars','public');
         Avatar::updateOrCreate(
 
-            ['user_id' => $user->id],
+            ['user_id' => $userId],
             ['original_name' => $request->avatar->getClientOriginalName(),
                 'path' => $path]
         );

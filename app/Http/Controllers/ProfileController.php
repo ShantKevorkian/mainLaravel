@@ -16,6 +16,7 @@ class ProfileController extends Controller
 {
     public function __construct()
     {
+            $this->middleware('is_admin');
             $this->middleware('auth');
     }
 
@@ -23,7 +24,7 @@ class ProfileController extends Controller
     {
         return view('profile')
             ->with('user', auth()->user()->load('detail','professions','avatar'))
-            ->with('galleries',Gallery::where('user_id',auth()->user()->id)->get()->load('galleryImages'))
+            ->with('galleries',Gallery::with(['galleryImages'])->where('user_id',auth()->id())->get())
             ->with('professions', Profession::all());
 
     }
@@ -51,7 +52,7 @@ class ProfileController extends Controller
     public function show(User $guest)
     {
         return view("profileGuest")
-            ->with('galleries',Gallery::where('user_id',$guest->id)->get()->load('galleryImages'))
+            ->with('galleries',Gallery::with(['galleryImages'])->where('user_id',$guest->id)->get())
             ->with('guest',$guest->load(['avatar','professions','detail']));
     }
 

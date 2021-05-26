@@ -12,7 +12,7 @@ class GalleryController extends Controller
 {
     public function create()
     {
-        return view('createGallery');
+        return view('gallery.create');
     }
 
     public function store(Request $request)
@@ -22,15 +22,14 @@ class GalleryController extends Controller
             'image.*' => 'image|mimes:jpeg,png,jfif,jpg,gif|max:2048',
             'title' => 'required|string|max:255',
         ]);
-        Gallery::create([
-            'user_id' => auth()->user()->id,
+        $gallery = Gallery::create([
+            'user_id' => auth()->id(),
             'title' => $request->title,
         ]);
-
         foreach ($request->file('image') as $image) {
             $path = $image->store('galleryImages', 'public');
             GalleryImage::create([
-                'gallery_id' => DB::table('galleries')->orderBy('id', 'desc')->first()->id,
+                'gallery_id' => $gallery->id,
                 'original_name' => $image->getClientOriginalName(),
                 'path' => $path,
             ]);
@@ -40,7 +39,8 @@ class GalleryController extends Controller
 
     public function show(Gallery $gallery)
     {
-        return view('showGallery')->with('gallery',$gallery->load('galleryImages'));
+        return view('gallery.show')
+            ->with('gallery',$gallery->load('galleryImages'));
     }
 
     public function update(Request $request, Gallery $gallery)
@@ -51,14 +51,14 @@ class GalleryController extends Controller
             'title' => 'required|string|max:255',
         ]);
 
-        Gallery::where('id',$gallery->id)->update([
+        $gallery->update([
             'title' => $request->title,
         ]);
 
         foreach ($request->file('image') as $image) {
             $path = $image->store('galleryImages', 'public');
             GalleryImage::create([
-                'gallery_id' => DB::table('galleries')->orderBy('id', 'desc')->first()->id,
+                'gallery_id' => $gallery->id,
                 'original_name' => $image->getClientOriginalName(),
                 'path' => $path,
             ]);
@@ -68,17 +68,17 @@ class GalleryController extends Controller
 
     public function deleteImage(Gallery $gallery, $id)
     {
-        $ImageBuilder = GalleryImage::where('id',$id);
-        Storage::delete($ImageBuilder->first()->path);
-        $ImageBuilder->delete();
+        $image = GalleryImage::where('id',$id)->first();
+        Storage::delete($image->path);
+        $image->delete();
         return redirect()->route("gallery.show",$gallery->id);
     }
 
     public function destroy(Gallery $gallery)
     {
-        Storage::delete(GalleryImage::where('gallery_id',$gallery->id)->pluck('path')->toArray());
-        GalleryImage::where('gallery_id',$gallery->id)->delete();
-        Gallery::where('id',$gallery->id)->delete();
+        Storage::delete($gallery->galleryImages()->pluck('path')->toArray());
+        $gallery->galleryImages()->delete();
+        $gallery->delete();
         return redirect()->route("profile.index");
     }
 }

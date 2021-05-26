@@ -1,7 +1,9 @@
 @extends('layouts.app')
-@section("navbar")
-    <a class="nav-link" href="{{ route('post.index') }}">{{ __('Posts') }}</a>
+
+@section('navbar')
+    <a class="nav-link" href="{{ route('posts.index') }}">{{ __('Posts') }}</a>
 @endsection
+
 @section('content')
     <div class="container">
         @if($user->avatar)
@@ -12,7 +14,7 @@
         @endif
 
 
-        <form action="{{route('avatar.upload')}}" method="POST" enctype="multipart/form-data">
+        <form action="{{route('avatar.store')}}" method="POST" enctype="multipart/form-data">
             @method('PUT')
             {{csrf_field()}}
             <div class="form-group">
